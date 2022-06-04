@@ -1,4 +1,4 @@
-FROM ruby:3.1.2-bullseye
+FROM ruby:3.1.2 AS rails-toolbox
 
 RUN apt-get update -qq && apt-get install -y nodejs postgresql-client libpq-dev
 
@@ -6,6 +6,7 @@ WORKDIR /quero_api
 COPY Gemfile /quero_api/Gemfile
 COPY Gemfile.lock /quero_api/Gemfile.lock
 RUN bundle install
+RUN chown -R $USER:$USER .
 
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
