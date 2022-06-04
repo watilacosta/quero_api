@@ -10,6 +10,10 @@ development:
   <<: *default
   database: quero_api_development
 
+test:
+  <<: *default
+  database: quero_api_test
+
 production:
   <<: *default
   database: quero_api_production
