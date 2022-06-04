@@ -15,8 +15,11 @@ group :development, :test do
   gem 'rubocop-performance', require: false
   gem 'rubocop-rake', require: false
   gem 'rubocop-rspec', require: false
+  gem "rspec-rails", "~> 5.1"
 end
 
-group :development do
+group :test do
+  gem 'shoulda-matchers', '~> 5.0'
+  gem 'database_cleaner-active_record'
+  gem 'rspec-json_expectations'
 end
-
