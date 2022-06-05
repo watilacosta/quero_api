@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Enrollment < ApplicationRecord
-  belongs_to :student
+  belongs_to :student, dependent: :destroy
+  has_many :bills
 
   validates :amount, presence: true
   validates :amount, numericality: { greater_than: 0 }
