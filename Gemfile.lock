@@ -71,6 +71,7 @@ GEM
       msgpack (~> 1.2)
     builder (3.2.4)
     concurrent-ruby (1.1.10)
+    cpf_cnpj (0.2.1)
     crass (1.0.6)
     database_cleaner-active_record (2.0.1)
       activerecord (>= 5.a)
@@ -213,6 +214,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
+  cpf_cnpj (~> 0.2.1)
   database_cleaner-active_record
   debug
   pg (~> 1.1)
