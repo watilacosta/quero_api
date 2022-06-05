@@ -8,5 +8,7 @@ class Student < ApplicationRecord
   validates :cpf, presence: true, uniqueness: true
   validates :payment_method, presence: true
 
+  has_many :enrollments
+
   enum payment_method: { credit_card: 0, bankslip: 1 }
 end
