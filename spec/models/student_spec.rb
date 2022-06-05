@@ -25,6 +25,7 @@ RSpec.describe Student, type: :model do
     end
 
     it { is_expected.to allow_value(nil).for(:birthdate) }
+    it { is_expected.to allow_value('').for(:birthdate) }
     it 'is expected to be kind of Date' do
       expect(subject.birthdate).to be_kind_of(Date)
     end
