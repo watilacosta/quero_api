@@ -3,29 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Bill, type: :model do
-  before do
-    Student.create!(
-      name: 'Student 1',
-      cpf: '060.567.500-78',
-      birthdate: '10/08/2000',
-      payment_method: [0, 1].sample
-    )
-    Enrollment.create!(
-      amount: 20_000,
-      installments: 5,
-      due_day: 10,
-      student_id: Student.last.id
-    )
-  end
-
-  subject do
-    Bill.create!(
-      amount: 150_000,
-      due_date: '22-07-2022',
-      status: [0, 1, 2].sample,
-      enrollment_id: Enrollment.last.id
-    )
-  end
+  subject { create(:bill) }
 
   describe 'associations' do
     it { is_expected.to belong_to(:enrollment).dependent(:destroy) }
@@ -40,16 +18,10 @@ RSpec.describe Bill, type: :model do
     it { is_expected.to validate_presence_of(:status) }
 
     it 'is expected to status default is 0 (open)', :aggregate_failures do
-      bill = Bill.create!(
-        amount: 150_000,
-        due_date: '22-07-2022',
-        enrollment_id: Enrollment.last.id
-      )
-
-      expect(bill).to be_valid
-      expect(bill.status).to eq('open')
-      expect(bill.status).to_not eq('pending')
-      expect(bill.status).to_not eq('paid')
+      expect(subject).to be_valid
+      expect(subject.status).to eq('open')
+      expect(subject.status).to_not eq('pending')
+      expect(subject.status).to_not eq('paid')
     end
   end
 end

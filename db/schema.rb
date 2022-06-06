@@ -12,37 +12,37 @@
 
 ActiveRecord::Schema[7.0].define(version: 2022_06_05_142413) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension 'plpgsql'
 
-  create_table "bills", force: :cascade do |t|
-    t.integer "amount", null: false
-    t.date "due_date", null: false
-    t.integer "status", default: 0, null: false
-    t.bigint "enrollment_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["enrollment_id"], name: "index_bills_on_enrollment_id"
+  create_table 'bills', force: :cascade do |t|
+    t.integer 'amount', null: false
+    t.date 'due_date', null: false
+    t.integer 'status', default: 0, null: false
+    t.bigint 'enrollment_id', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['enrollment_id'], name: 'index_bills_on_enrollment_id'
   end
 
-  create_table "enrollments", force: :cascade do |t|
-    t.integer "amount", null: false
-    t.integer "installments", null: false
-    t.integer "due_day", null: false
-    t.bigint "student_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["student_id"], name: "index_enrollments_on_student_id"
+  create_table 'enrollments', force: :cascade do |t|
+    t.integer 'amount', null: false
+    t.integer 'installments', null: false
+    t.integer 'due_day', null: false
+    t.bigint 'student_id', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['student_id'], name: 'index_enrollments_on_student_id'
   end
 
-  create_table "students", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "cpf", null: false
-    t.date "birthdate"
-    t.integer "payment_method", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'students', force: :cascade do |t|
+    t.string 'name', null: false
+    t.string 'cpf', null: false
+    t.date 'birthdate'
+    t.integer 'payment_method', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  add_foreign_key "bills", "enrollments"
-  add_foreign_key "enrollments", "students"
+  add_foreign_key 'bills', 'enrollments'
+  add_foreign_key 'enrollments', 'students'
 end

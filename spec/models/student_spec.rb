@@ -8,14 +8,7 @@ RSpec.describe Student, type: :model do
   end
 
   describe 'validations' do
-    subject do
-      Student.create!(
-        name: 'Student 1',
-        cpf: '060.567.500-78',
-        birthdate: '10/08/2000',
-        payment_method: [0, 1].sample
-      )
-    end
+    subject { create(:student) }
 
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:cpf) }
@@ -25,7 +18,7 @@ RSpec.describe Student, type: :model do
     end
 
     it 'is expect to not be valid' do
-      expect(Student.new).to_not be_valid
+      expect(build(:student, cpf: nil)).to_not be_valid
     end
 
     it { is_expected.to allow_value(nil).for(:birthdate) }
