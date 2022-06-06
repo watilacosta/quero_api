@@ -70,8 +70,11 @@ GEM
     bootsnap (1.12.0)
       msgpack (~> 1.2)
     builder (3.2.4)
+    clipboard (1.3.6)
     concurrent-ruby (1.1.10)
     cpf_cnpj (0.2.1)
+    cpf_faker (1.3.0)
+      clipboard
     crass (1.0.6)
     database_cleaner-active_record (2.0.1)
       activerecord (>= 5.a)
@@ -97,6 +100,20 @@ GEM
     io-console (0.5.11)
     irb (1.4.1)
       reline (>= 0.3.0)
+    jsonapi-serializer (2.2.0)
+      activesupport (>= 4.2)
+    kaminari (1.2.2)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.2)
+      kaminari-activerecord (= 1.2.2)
+      kaminari-core (= 1.2.2)
+    kaminari-actionview (1.2.2)
+      actionview
+      kaminari-core (= 1.2.2)
+    kaminari-activerecord (1.2.2)
+      activerecord
+      kaminari-core (= 1.2.2)
+    kaminari-core (1.2.2)
     loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -222,10 +239,13 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   cpf_cnpj (~> 0.2.1)
+  cpf_faker
   database_cleaner-active_record
   debug
   factory_bot_rails
   faker
+  jsonapi-serializer
+  kaminari
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.3)
