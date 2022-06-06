@@ -8,7 +8,7 @@ RSpec.describe 'Students', type: :request do
     get students_path, params: { page: 1, count: 3 }
   end
 
-  describe 'GET /index' do
+  describe 'GET /students' do
     context 'with page and count params' do
       it 'returns http success' do
         expect(response).to have_http_status(:ok)
@@ -35,4 +35,37 @@ RSpec.describe 'Students', type: :request do
       end
     end
   end
+
+  describe 'POST /students' do
+    context 'with valid params' do
+      before do
+        params = attributes_for(:student)
+        post students_path, params: { student: params }
+      end
+
+      it 'returns http success' do
+        expect(response).to have_http_status(:created)
+      end
+
+      it 'returns student id' do
+        expect(json).to eq(Student.last.id)
+      end
+    end
+
+    context 'with invalid params' do
+      before do
+        params = attributes_for(:student, cpf: nil)
+        post students_path, params: { student: params }
+      end
+
+      it 'returns http unprocessable entity' do
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'returns error message' do
+        expect(json['cpf']).to eq(['inválido!', "can't be blank"])
+      end
+    end
+  end
 end
+
