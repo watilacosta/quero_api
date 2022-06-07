@@ -16,7 +16,7 @@ RSpec.describe 'Students', type: :request do
       it 'returns json' do
         expect(response.content_type).to eq('application/json; charset=utf-8')
       end
-      it 'returns 5 students' do
+      it 'returns a list with 3 students' do
         expect(json['data'].length).to eq(3)
       end
     end

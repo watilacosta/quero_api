@@ -2,10 +2,10 @@
 
 class StudentsController < ApplicationController
   def index
-    @students = Student.page(params[:page]).per(params[:count])
-    student_serialized = StudentSerializer.new(@students).serializable_hash
+    students = Student.page(params[:page]).per(params[:count])
+    students_serialized = StudentSerializer.new(students).serializable_hash
 
-    render json: { page: params[:page] || 1 }.merge(student_serialized), status: :ok
+    render json: { page: params[:page] || 1 }.merge(students_serialized), status: :ok
   end
 
   def create
