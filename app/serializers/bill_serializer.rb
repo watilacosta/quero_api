@@ -3,7 +3,7 @@
 class BillSerializer
   include JSONAPI::Serializer
 
-  belongs_to :enrollment
+  belongs_to :enrollment, dependent: :destroy
 
-  attributes :id, :amount, :due_date, :status
+  attributes :id, :due_date, :status, :amount
 end

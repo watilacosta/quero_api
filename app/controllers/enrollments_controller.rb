@@ -2,7 +2,7 @@
 
 class EnrollmentsController < ApplicationController
   def index
-    enrollments = serializing_enrollment(params)
+    enrollments = Enrollment.serializing_enrollment(params)
 
     render json: { page: params[:page] || 1 }.merge(enrollments), status: :ok
   end
@@ -11,7 +11,9 @@ class EnrollmentsController < ApplicationController
     enrollment = Enrollment.new(enrollment_params)
 
     if enrollment.save
-      render json: enrollment, status: :created
+      generate_bills(enrollment)
+      enrollment_serialized = EnrollmentSerializer.new(enrollment).serializable_hash
+      render json: enrollment_serialized, status: :created
     else
       render json: { errors: enrollment.errors }, status: :unprocessable_entity
     end
@@ -19,9 +21,14 @@ class EnrollmentsController < ApplicationController
 
   private
 
-  def serializing_enrollment(params)
-    enrollments = Enrollment.page(params[:page]).per(params[:count])
-    EnrollmentSerializer.new(enrollments).serializable_hash
+  def generate_bills(enrollment)
+    enrollment.installments.times do |index|
+      Bill.create!(
+        enrollment_id: enrollment.id,
+        amount: enrollment.amount / enrollment.installments,
+        due_date: Bill.generate_due_date(enrollment.due_day, index)
+      )
+    end
   end
 
   def enrollment_params

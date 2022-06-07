@@ -47,11 +47,10 @@ RSpec.describe 'Enrollments', type: :request do
             enrollment_id: json['id'],
             amount: json['amount'] / json['installments'],
             due_date: if json['due_day'] < Date.today.day
-                        Date.today.advance(months: index + 1)
-                      elsif Date.today.day + json['due_day'] >= Date.today.end_of_month.day
-                        Date.today.end_of_month
+                        Date.new(Date.today.year, Date.today.month, due_day).advance(months: index + 1)
                       else
-                        Date.today.advance(days: json['due_day'], months: index)
+                        due_date = Date.new(Date.today.year, Date.today.month, json['due_day'])
+                        due_date + index.months
                       end
           )
         end
