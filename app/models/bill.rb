@@ -3,8 +3,7 @@
 class Bill < ApplicationRecord
   belongs_to :enrollment, dependent: :destroy
 
-  validates :amount, presence: true
-  validates :amount, numericality: { greater_than: 0 }
+  validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :due_date, presence: true
   validates :status, presence: true
 

@@ -2,7 +2,7 @@
 
 class EnrollmentsController < ApplicationController
   def index
-    enrollments = serialize_enrollment(params)
+    enrollments = serializing_enrollment(params)
 
     render json: { page: params[:page] || 1 }.merge(enrollments), status: :ok
   end
@@ -19,7 +19,7 @@ class EnrollmentsController < ApplicationController
 
   private
 
-  def serialize_enrollment(params)
+  def serializing_enrollment(params)
     enrollments = Enrollment.page(params[:page]).per(params[:count])
     EnrollmentSerializer.new(enrollments).serializable_hash
   end

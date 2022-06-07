@@ -38,9 +38,23 @@ RSpec.describe 'Enrollments', type: :request do
     context 'with valid params' do
       before do
         student = create(:student)
-        post enrollments_path, params: {
-          enrollment: attributes_for(:enrollment, student_id: student.id)
-        }
+        enrollment = attributes_for(:enrollment, student_id: student.id)
+
+        post enrollments_path, params: { enrollment: }
+
+        json['installments'].times do |index|
+          Bill.create(
+            enrollment_id: json['id'],
+            amount: json['amount'] / json['installments'],
+            due_date: if json['due_day'] < Date.today.day
+                        Date.today.advance(months: index + 1)
+                      elsif Date.today.day + json['due_day'] >= Date.today.end_of_month.day
+                        Date.today.end_of_month
+                      else
+                        Date.today.advance(days: json['due_day'], months: index)
+                      end
+          )
+        end
       end
 
       it 'returns http success' do
