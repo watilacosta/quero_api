@@ -12,11 +12,13 @@ class EnrollmentsController < ApplicationController
   def create
     enrollment = Enrollment.new(enrollment_params)
 
-    if enrollment.save
+    ActiveRecord::Base.transaction do
+      enrollment.save!
       generate_bills(enrollment)
       enrollment_serialized = EnrollmentSerializer.new(enrollment).serializable_hash
+
       render json: enrollment_serialized, status: :created
-    else
+    rescue StandardError
       render json: { errors: enrollment.errors }, status: :unprocessable_entity
     end
   end

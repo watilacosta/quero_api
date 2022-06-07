@@ -35,26 +35,31 @@ RSpec.describe 'Enrollments', type: :request do
   end
 
   describe 'POST /enrollments' do
+    let(:authorization) { ActionController::HttpAuthentication::Basic.encode_credentials('admin_ops', 'billing') }
+    let(:headers) { { 'HTTP_AUTHORIZATION' => authorization } }
+
     context 'with valid params' do
       before do
         student = create(:student)
         enrollment = attributes_for(:enrollment, student_id: student.id)
 
-        post enrollments_path, params: { enrollment: }
+        post enrollments_path, params: { enrollment: }, headers: headers
 
-        json_response = json['data']['attributes']
-        json_response['installments'].times do |index|
-          Bill.create(
-            enrollment_id: json_response['id'],
-            amount: json_response['amount'] / json_response['installments'],
-            due_date: if json_response['due_day'] < Date.today.day
-                        Date.new(Date.today.year, Date.today.month, json_response['due_day'])
-                            .advance(months: index + 1)
-                      else
-                        due_date = Date.new(Date.today.year, Date.today.month, json_response['due_day'])
-                        due_date + index.months
-                      end
-          )
+        if json['data'].present?
+          json_response = json['data']['attributes']
+          json_response['installments'].times do |index|
+            Bill.create(
+              enrollment_id: json_response['id'],
+              amount: json_response['amount'] / json_response['installments'],
+              due_date: if json_response['due_day'] < Date.today.day
+                          Date.new(Date.today.year, Date.today.month, json_response['due_day'])
+                              .advance(months: index + 1)
+                        else
+                          due_date = Date.new(Date.today.year, Date.today.month, json_response['due_day'])
+                          due_date + index.months
+                        end
+            )
+          end
         end
       end
 
@@ -75,7 +80,7 @@ RSpec.describe 'Enrollments', type: :request do
 
     context 'with invalid params' do
       before do
-        post enrollments_path, params: { enrollment: { installments: nil } }
+        post enrollments_path, params: { enrollment: { installments: nil } }, headers: headers
       end
 
       it 'returns http unprocessable entity' do
