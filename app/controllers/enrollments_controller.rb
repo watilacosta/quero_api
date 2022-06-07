@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class EnrollmentsController < ApplicationController
+  http_basic_authenticate_with name: 'admin_ops', password: 'billing', only: :create
+
   def index
     enrollments = Enrollment.serializing_enrollment(params)
 
