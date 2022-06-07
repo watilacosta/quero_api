@@ -42,14 +42,16 @@ RSpec.describe 'Enrollments', type: :request do
 
         post enrollments_path, params: { enrollment: }
 
-        json['installments'].times do |index|
+        json_response = json['data']['attributes']
+        json_response['installments'].times do |index|
           Bill.create(
-            enrollment_id: json['id'],
-            amount: json['amount'] / json['installments'],
-            due_date: if json['due_day'] < Date.today.day
-                        Date.new(Date.today.year, Date.today.month, due_day).advance(months: index + 1)
+            enrollment_id: json_response['id'],
+            amount: json_response['amount'] / json_response['installments'],
+            due_date: if json_response['due_day'] < Date.today.day
+                        Date.new(Date.today.year, Date.today.month, json_response['due_day'])
+                            .advance(months: index + 1)
                       else
-                        due_date = Date.new(Date.today.year, Date.today.month, json['due_day'])
+                        due_date = Date.new(Date.today.year, Date.today.month, json_response['due_day'])
                         due_date + index.months
                       end
           )
@@ -59,20 +61,30 @@ RSpec.describe 'Enrollments', type: :request do
       it 'returns http success' do
         expect(response).to have_http_status(:created)
       end
+
+      it 'returns the correct number of bills' do
+        expect(json['data']['attributes']['installments']).to eq(Enrollment.last.installments)
+      end
+
+      it 'returns the correct attributes', :aggregate_failures do
+        expect(json['data']['attributes']['amount']).to eq(Enrollment.last.amount)
+        expect(json['data']['attributes']['due_day']).to eq(Enrollment.last.due_day)
+        expect(json['data']['attributes']['student_id']).to eq(Enrollment.last.student_id)
+      end
     end
 
-    # context 'with invalid params' do
-    #   before do
-    #     post enrollments_path, params: { enrollment: attributes_for(:enrollment, :invalid) }
-    #   end
-    #
-    #   it 'returns an error response' do
-    #     expect(response).to have_http_status(:unprocessable_entity)
-    #   end
-    #
-    #   it 'returns a list with 10 enrollments' do
-    #     expect(json['data'].length).to eq(10)
-    #   end
-    # end
+    context 'with invalid params' do
+      before do
+        post enrollments_path, params: { enrollment: { installments: nil } }
+      end
+
+      it 'returns http unprocessable entity' do
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'returns the correct error message' do
+        expect(json['errors']['installments']).to eq(["can't be blank", 'is not a number'])
+      end
+    end
   end
 end

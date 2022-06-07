@@ -7,7 +7,6 @@ ruby '3.1.2'
 
 gem 'bootsnap', require: false
 gem 'cpf_cnpj', '~> 0.2.1'
-gem 'cpf_faker'
 gem 'jsonapi-serializer'
 gem 'kaminari'
 gem 'pg', '~> 1.1'
@@ -16,6 +15,7 @@ gem 'rails', '~> 7.0.3'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 group :development, :test do
+  gem 'cpf_faker'
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails'
   gem 'faker'
