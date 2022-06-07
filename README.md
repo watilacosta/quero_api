@@ -1,24 +1,18 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Comandos necessários
 
-Things you may want to cover:
+### Esta api rails é baseada em docker e docker-compose
 
-* Ruby version
+***
+* Buildar a api: docker-compose build
+* Iniciar a api: docker-compose up
+* Parar a api: docker-compose down
+* Reiniciar a api: docker-compose restart
+### Setup do banco de dados
+* Abra um novo terminal e rode
+* docker-compose run web rails db:setup
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### Rodar os testes atuomatizados
+* Abra um novo terminal e rode
+* docker-compose run web rails rspec
