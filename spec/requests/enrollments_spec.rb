@@ -45,21 +45,19 @@ RSpec.describe 'Enrollments', type: :request do
 
         post enrollments_path, params: { enrollment: }, headers: headers
 
-        if json['data'].present?
-          json_response = json['data']['attributes']
-          json_response['installments'].times do |index|
-            Bill.create(
-              enrollment_id: json_response['id'],
-              amount: json_response['amount'] / json_response['installments'],
-              due_date: if json_response['due_day'] < Date.today.day
-                          Date.new(Date.today.year, Date.today.month, json_response['due_day'])
-                              .advance(months: index + 1)
-                        else
-                          due_date = Date.new(Date.today.year, Date.today.month, json_response['due_day'])
-                          due_date + index.months
-                        end
-            )
-          end
+        json_response = json['data']['attributes']
+        json_response['installments'].times do |index|
+          Bill.create(
+            enrollment_id: json_response['id'],
+            amount: json_response['amount'] / json_response['installments'],
+            due_date: if json_response['due_day'] < Date.today.day
+                        Date.new(Date.today.year, Date.today.month, json_response['due_day'])
+                            .advance(months: index + 1)
+                      else
+                        Date.new(Date.today.year, Date.today.month,
+                                 Bill.due_day_validated(json_response['due_day'])) + index.months
+                      end
+          )
         end
       end
 

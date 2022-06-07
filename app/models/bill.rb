@@ -19,8 +19,13 @@ class Bill < ApplicationRecord
     if due_day < Date.today.day
       Date.new(Date.today.year, Date.today.month, due_day).advance(months: index + 1)
     else
-      due_date = Date.new(Date.today.year, Date.today.month, due_day)
-      due_date + index.months
+      Date.new(Date.today.year, Date.today.month, due_day_validated(due_day)) + index.months
     end
+  end
+
+  def self.due_day_validated(due_day)
+    return due_day if due_day < Date.today.end_of_month.day
+
+    Date.today.end_of_month.day
   end
 end
